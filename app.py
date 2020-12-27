@@ -40,7 +40,7 @@ def startOperations(path):
                 if key == dataKey :
                     print("Key already exists in the datastore. Please enter a new key.")
                     keyCheck()
-        f.close()
+            f.close()
         while True:
             JSONPath = Path(str(input("Enter the path of the JSON Object File")))
             if(os.path.exists(JSONPath)):
@@ -55,6 +55,7 @@ def startOperations(path):
                     f.write(key + "= " + json.dumps(data) + "\n")
                     print("Key Value Pair Added Successfully")
                     f.close()
+                    JSONFile.close()
                 break
             else:
                 print("File Doesn't Exist")
