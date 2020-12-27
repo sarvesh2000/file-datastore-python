@@ -2,6 +2,7 @@ import platform
 import os
 from pathlib import Path
 import json
+import fcntl
 
 def keyCheck():
     while True:
@@ -31,6 +32,7 @@ def startOperations(path):
         newPath = os.path.join(path,filename)
         if(os.path.exists(newPath)):
             f = open(newPath, "r")
+            fcntl.flock(f, fcntl.LOCK_EX)
             count = 1
             Lines = f.readlines()
             for line in Lines:
@@ -40,6 +42,7 @@ def startOperations(path):
                 if key == dataKey :
                     print("Key already exists in the datastore. Please enter a new key.")
                     keyCheck()
+            fcntl.flock(f, fcntl.LOCK_UN)
             f.close()
         while True:
             JSONPath = Path(str(input("Enter the path of the JSON Object File")))
@@ -52,8 +55,10 @@ def startOperations(path):
                     data = json.load(JSONFile)
                     print(data)
                     f = open(newPath, "a+")
+                    fcntl.flock(f, fcntl.LOCK_EX)
                     f.write(key + "= " + json.dumps(data) + "\n")
                     print("Key Value Pair Added Successfully")
+                    fcntl.flock(f, fcntl.LOCK_UN)
                     f.close()
                     JSONFile.close()
                 break
@@ -68,6 +73,7 @@ def startOperations(path):
         newPath = os.path.join(path,filename)
         if(os.path.exists(newPath)):
             f = open(newPath, "r")
+            fcntl.flock(f, fcntl.LOCK_EX)
             Lines = f.readlines()
             flag = False
             for line in Lines:
@@ -80,7 +86,8 @@ def startOperations(path):
                     break
             if not flag :
                 print("Key Not Found")
-        f.close()
+            fcntl.flock(f, fcntl.LOCK_UN)
+            f.close()
     elif(choice == 3):
         print("Update Mode Selected")
         key = keyCheck()
@@ -88,10 +95,13 @@ def startOperations(path):
         newPath = os.path.join(path,filename)
         if(os.path.exists(newPath)):
             f = open(newPath, "r")
+            fcntl.flock(f, fcntl.LOCK_EX)
             Lines = f.readlines()
             flag = False
+            fcntl.flock(f, fcntl.LOCK_UN)
             f.close()
             f = open(newPath, "w")
+            fcntl.flock(f, fcntl.LOCK_EX)
             for line in Lines:
                 dataKey = line.split('=')[0].strip()
                 dataValue = line.split('=')[1].strip()
@@ -113,6 +123,7 @@ def startOperations(path):
                                 f = open(newPath, "w")
                                 f.write(key + "= " + json.dumps(data) + "\n")
                                 print("Key Value Pair Updated Successfully")
+                                fcntl.flock(f, fcntl.LOCK_UN)
                                 f.close()
                             break
                         else:
@@ -128,6 +139,7 @@ def startOperations(path):
         newPath = os.path.join(path,filename)
         if(os.path.exists(newPath)):
             f = open(newPath, "r")
+            fcntl.flock(f, fcntl.LOCK_EX)
             Lines = f.readlines()
             flag = False
             f.close()
@@ -141,6 +153,7 @@ def startOperations(path):
             if not flag :
                 print("Key Not Found")
             print("Delete Operation Successful.")
+            fcntl.flock(f, fcntl.LOCK_UN)
             f.close()
 if(platform.system() == 'Windows'):
     defPath = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') 
