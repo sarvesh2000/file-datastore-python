@@ -79,10 +79,30 @@ def startOperations(path):
                     break
             if not flag :
                 print("Key Not Found")
+        f.close()
     elif(choice == 3):
         print("Update Mode Selected")
     else:
         print("Delete Mode Selected")
+        key = keyCheck()
+        filename = "datastore.txt"
+        newPath = os.path.join(path,filename)
+        if(os.path.exists(newPath)):
+            f = open(newPath, "r")
+            Lines = f.readlines()
+            flag = False
+            f.close()
+            f = open(newPath, "w")
+            for line in Lines:
+                dataKey = line.split('=')[0].strip()
+                dataValue = line.split('=')[1].strip()
+                if key != dataKey :
+                    flag = True
+                    f.write(line)
+            if not flag :
+                print("Key Not Found")
+            print("Delete Operation Successful.")
+            f.close()
 if(platform.system() == 'Windows'):
     defPath = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') 
     print(defPath)
