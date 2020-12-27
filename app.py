@@ -19,10 +19,16 @@ def startOperations(path):
             break
     if(choice == 1):
         print("Create Mode Selected")
+        while True:
+            key = input("Enter a key (max. length 32) ")
+            if len(key) <= 32:
+                break
+            else:
+                print("Key length is more - keep it shorter!")
     elif(choice == 2):
         print("Read Mode Selected")
     elif(choice == 3):
-        print("Update Mode Selecte")
+        print("Update Mode Selected")
     else:
         print("Delete Mode Selected")
 if(platform.system() == 'Windows'):
