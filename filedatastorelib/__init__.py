@@ -1,4 +1,8 @@
 def keyCheck():
+    """
+    Function to check whether the key entered by the use is valid or not.
+    Returns the key entered by the user if it's a valid one.
+    """
     while True:
             key = input("Enter a key (max. length 32) ")
             if len(key) <= 32:
@@ -7,6 +11,12 @@ def keyCheck():
                 print("Key length is more - keep it shorter!")
     return key
 def startOperations(path):
+    """
+    Takes a single argument path that contains the path provided by the user to save the datastore file.
+    Returns nothing.
+    """
+
+    # Shows the menu to the user and get's the user's input.
     while True:
         try:
             print("Operations permitted are:\n1. Create a new Key Value Pair\n2. Read the Key Value Pairs\n3. Update a Key Value Pair\n4. Delete a Key Value Pair\nEnter your choice (1-4):")
@@ -19,6 +29,8 @@ def startOperations(path):
             continue
         else:
             break
+    
+    # Create Operation Block 
     if(choice == 1):
         print("Create Mode Selected")
         key = keyCheck()
@@ -26,7 +38,7 @@ def startOperations(path):
         newPath = os.path.join(path,filename)
         if(os.path.exists(newPath)):
             f = open(newPath, "r")
-            fcntl.flock(f, fcntl.LOCK_EX)
+            fcntl.flock(f, fcntl.LOCK_EX) # Locking the file so that other processes can't access it while in use.
             count = 1
             Lines = f.readlines()
             for line in Lines:
@@ -36,12 +48,12 @@ def startOperations(path):
                 if key == dataKey :
                     print("Key already exists in the datastore. Please enter a new key.")
                     keyCheck()
-            fcntl.flock(f, fcntl.LOCK_UN)
+            fcntl.flock(f, fcntl.LOCK_UN) # Unlocking the file so that other processes can access it.
             f.close()
         while True:
             JSONPath = Path(str(input("Enter the path of the JSON Object File")))
             if(os.path.exists(JSONPath)):
-                if((Path(JSONPath).stat().st_size/1000)>16):
+                if((Path(JSONPath).stat().st_size/1000)>16): # Checking if JSON Object is less than 16 KB.
                     print("JSON File Size greater than 16KB. Please reduce your file size.")
                     continue
                 else:
@@ -60,6 +72,7 @@ def startOperations(path):
                 print("File Doesn't Exist")
                 continue
 
+    # Read Operation Block 
     elif(choice == 2):
         print("Read Mode Selected")
         key = keyCheck()
@@ -82,6 +95,8 @@ def startOperations(path):
                 print("Key Not Found")
             fcntl.flock(f, fcntl.LOCK_UN)
             f.close()
+    
+    # Update Operation Block 
     elif(choice == 3):
         print("Update Mode Selected")
         key = keyCheck()
@@ -126,6 +141,8 @@ def startOperations(path):
             if not flag :
                 print("Key Not Found")
                 print("Update Operation Successful.")
+    
+    # Delete Operation Block
     else:
         print("Delete Mode Selected")
         key = keyCheck()
