@@ -34,7 +34,7 @@ def startOperations(path):
             count = 1
             Lines = f.readlines()
             for line in Lines:
-                dataKey = line.split(':')[0].strip()
+                dataKey = line.split('=')[0].strip()
                 print("Data Key " + dataKey)
                 count = count + 1
                 if key == dataKey :
@@ -52,7 +52,7 @@ def startOperations(path):
                     data = json.load(JSONFile)
                     print(data)
                     f = open(newPath, "a+")
-                    f.write("\n"+ key + json.dumps(data))
+                    f.write("\n"+ key + "= " + json.dumps(data))
                     print("Key Value Pair Added Successfully")
                     f.close()
                 break
@@ -60,11 +60,25 @@ def startOperations(path):
                 print("File Doesn't Exist")
                 continue
 
-
-        
-
     elif(choice == 2):
         print("Read Mode Selected")
+        key = keyCheck()
+        filename = "datastore.txt"
+        newPath = os.path.join(path,filename)
+        if(os.path.exists(newPath)):
+            f = open(newPath, "r")
+            Lines = f.readlines()
+            flag = False
+            for line in Lines:
+                dataKey = line.split('=')[0].strip()
+                dataValue = line.split('=')[1].strip()
+                if key == dataKey :
+                    print("Data Key " + dataKey)
+                    print("Data Value " + dataValue)
+                    flag = True
+                    break
+            if not flag :
+                print("Key Not Found")
     elif(choice == 3):
         print("Update Mode Selected")
     else:
