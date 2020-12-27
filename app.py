@@ -26,6 +26,7 @@ def startOperations(path):
             break
     if(choice == 1):
         print("Create Mode Selected")
+        key = keyCheck()
         filename = "datastore.txt"
         newPath = os.path.join(path,filename)
         if(os.path.exists(newPath)):
@@ -36,9 +37,10 @@ def startOperations(path):
                 dataKey = line.split(':')[0].strip()
                 print("Data Key " + dataKey)
                 count = count + 1
-                if keyCheck() == dataKey :
+                if key == dataKey :
                     print("Key already exists in the datastore. Please enter a new key.")
                     keyCheck()
+        f.close()
         while True:
             JSONPath = Path(str(input("Enter the path of the JSON Object File")))
             if(os.path.exists(JSONPath)):
@@ -49,10 +51,15 @@ def startOperations(path):
                     JSONFile = open(JSONPath)
                     data = json.load(JSONFile)
                     print(data)
+                    f = open(newPath, "a+")
+                    f.write("\n"+ key + json.dumps(data))
+                    print("Key Value Pair Added Successfully")
+                    f.close()
                 break
             else:
                 print("File Doesn't Exist")
                 continue
+
 
         
 
