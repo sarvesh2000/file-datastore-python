@@ -52,7 +52,7 @@ def startOperations(path):
                     data = json.load(JSONFile)
                     print(data)
                     f = open(newPath, "a+")
-                    f.write("\n"+ key + "= " + json.dumps(data))
+                    f.write(key + "= " + json.dumps(data) + "\n")
                     print("Key Value Pair Added Successfully")
                     f.close()
                 break
@@ -82,6 +82,44 @@ def startOperations(path):
         f.close()
     elif(choice == 3):
         print("Update Mode Selected")
+        key = keyCheck()
+        filename = "datastore.txt"
+        newPath = os.path.join(path,filename)
+        if(os.path.exists(newPath)):
+            f = open(newPath, "r")
+            Lines = f.readlines()
+            flag = False
+            f.close()
+            f = open(newPath, "w")
+            for line in Lines:
+                dataKey = line.split('=')[0].strip()
+                dataValue = line.split('=')[1].strip()
+                if key != dataKey :
+                    flag = True
+                    f.write(line)
+                else:
+                    flag = True
+                    while True:
+                        JSONPath = Path(str(input("Enter the path of the JSON Object File")))
+                        if(os.path.exists(JSONPath)):
+                            if((Path(JSONPath).stat().st_size/1000)>16):
+                                print("JSON File Size greater than 16KB. Please reduce your file size.")
+                                continue
+                            else:
+                                JSONFile = open(JSONPath)
+                                data = json.load(JSONFile)
+                                print(data)
+                                f = open(newPath, "w")
+                                f.write(key + "= " + json.dumps(data) + "\n")
+                                print("Key Value Pair Updated Successfully")
+                                f.close()
+                            break
+                        else:
+                            print("File Doesn't Exist")
+                            continue
+            if not flag :
+                print("Key Not Found")
+                print("Update Operation Successful.")
     else:
         print("Delete Mode Selected")
         key = keyCheck()
