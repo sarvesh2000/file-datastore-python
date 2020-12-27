@@ -1,5 +1,6 @@
 import platform
 import os
+from pathlib import Path
 
 def startOperations(path):
     filename = "datastore.txt"
@@ -25,6 +26,21 @@ def startOperations(path):
                 break
             else:
                 print("Key length is more - keep it shorter!")
+        while True:
+            JSONPath = Path(str(input("Enter the path of the JSON Object File")))
+            if(os.path.exists(JSONPath)):
+                if((Path(JSONPath).stat().st_size/1000)>16):
+                    print("JSON File Size greater than 16KB. Please reduce your file size.")
+                    continue
+                else:
+                    JSONFile = open(JSONPath)
+                break
+            else:
+                print("File Doesn't Exist")
+                continue
+
+        
+
     elif(choice == 2):
         print("Read Mode Selected")
     elif(choice == 3):
